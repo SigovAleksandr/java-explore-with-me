@@ -1,5 +1,6 @@
 package ru.practicum.ewm.stats.server;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
@@ -7,18 +8,14 @@ import ru.practicum.ewm.stats.dto.ViewStatsDto;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class StatsServerController {
 
     private final StatsServerService statsServerService;
 
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public StatsServerController(StatsServerService statsServerService) {
         this.statsServerService = statsServerService;
@@ -30,25 +27,11 @@ public class StatsServerController {
         statsServerService.addHit(endpointHitDto);
     }
 
-    @GetMapping(path = "/stats")                                                  //Получение статистики за период
-    public List<ViewStatsDto> getStats(@RequestParam String start,
-                                         @RequestParam String end,
-                                         @RequestParam(required = false) String[] uris,
-                                         @RequestParam(defaultValue = "false") boolean unique) {
-        List<ViewStatsDto> list = new ArrayList<>();
-        if (unique) {                                                        //Получение статистики для уникального ip
-            for (String uri : uris) {
-                list.add(statsServerService.getUniqueIpStats(LocalDateTime.parse(start, FORMATTER),
-                        LocalDateTime.parse(end, FORMATTER), uri));
-            }
-        } else {
-            for (String uri : uris) {
-                list.add(statsServerService.getUriStats(LocalDateTime.parse(start, FORMATTER),
-                        LocalDateTime.parse(end, FORMATTER), uri));
-            }
-        }
-        return list.stream()
-                .sorted(Comparator.comparingLong(ViewStatsDto::getHits).reversed())
-                .collect(Collectors.toList());
+    @GetMapping("/stats")
+    public List<ViewStatsDto> getStats(@RequestParam @DateTimeFormat(pattern = DATETIME_FORMAT) LocalDateTime start,
+                                       @RequestParam @DateTimeFormat(pattern = DATETIME_FORMAT) LocalDateTime end,
+                                       @RequestParam(required = false) List<String> uris,
+                                       @RequestParam(defaultValue = "false") Boolean unique) {
+        return statsServerService.getStats(start, end, uris, unique);
     }
 }

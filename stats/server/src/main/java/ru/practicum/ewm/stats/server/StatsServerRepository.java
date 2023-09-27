@@ -8,9 +8,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatsServerRepository extends JpaRepository<EndpointHit, Long> {
-    List<EndpointHit> findAllByTimestampBetweenAndUri(LocalDateTime start, LocalDateTime end, String uri);
+    @Query("SELECT h.app AS app, h.uri AS uri, COUNT(DISTINCT h.ip) AS hits " +
+            "FROM EndpointHit h " +
+            "WHERE h.timestamp BETWEEN :start AND :end " +
+            "AND ((:uris) IS NULL OR h.uri IN :uris) " +
+            "GROUP BY h.app, h.uri " +
+            "ORDER BY hits DESC")
+    List<ViewStatsProjection> findUniqueStats(LocalDateTime start, LocalDateTime end, List<String> uris);
 
-    @Query(value = "SELECT DISTINCT ON (ip) hit_id, app, uri, ip, timestamp FROM hits WHERE uri=? " +
-            "AND (timestamp between ? and ?)", nativeQuery = true)
-    List<EndpointHit> findUniqueUriStats(String uri, LocalDateTime start, LocalDateTime end);
+    @Query("SELECT h.app AS app, h.uri AS uri, COUNT(h.ip) AS hits " +
+            "FROM EndpointHit h " +
+            "WHERE h.timestamp BETWEEN :start AND :end " +
+            "AND ((:uris) IS NULL OR h.uri IN :uris) " +
+            "GROUP BY h.app, h.uri " +
+            "ORDER BY hits DESC")
+    List<ViewStatsProjection> findNonUniqueStats(LocalDateTime start, LocalDateTime end, List<String> uris);
 }
