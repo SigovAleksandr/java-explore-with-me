@@ -10,7 +10,6 @@ import ru.practicum.ewm.stats.server.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StatsServerServiceImpl implements StatsServerService {
