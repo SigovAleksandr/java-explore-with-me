@@ -1,8 +1,8 @@
-package ru.practicum.ewm.stats.mapper;
+package ru.practicum.ewm.stats.server.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
-import ru.practicum.ewm.stats.model.EndpointHit;
+import ru.practicum.ewm.stats.server.entity.EndpointHit;
 
 @UtilityClass
 public class ViewStatsMapper {
