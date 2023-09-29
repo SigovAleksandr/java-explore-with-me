@@ -14,19 +14,19 @@ import java.time.LocalDateTime;
 @Table(name = "hits")
 public class EndpointHit {
     @Id
-    @Column(name = "hit_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "hit_app")
+    @Column(name = "app")
     String app;
 
-    @Column(name = "hit_uri")
+    @Column(name = "uri")
     String uri;
 
-    @Column(name = "hit_ip")
+    @Column(name = "ip")
     String ip;
 
-    @Column(name = "hit_timestamp")
+    @Column(name = "timestamp")
     LocalDateTime timestamp;
 }
