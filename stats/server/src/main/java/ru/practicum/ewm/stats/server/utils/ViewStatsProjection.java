@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stats.server;
+package ru.practicum.ewm.stats.server.utils;
 
 public interface ViewStatsProjection {
     String getApp();

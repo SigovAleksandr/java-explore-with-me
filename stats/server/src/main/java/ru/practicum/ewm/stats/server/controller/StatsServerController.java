@@ -1,10 +1,11 @@
-package ru.practicum.ewm.stats.server;
+package ru.practicum.ewm.stats.server.controller;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
+import ru.practicum.ewm.stats.server.service.StatsServerService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;

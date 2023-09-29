@@ -1,9 +1,11 @@
-package ru.practicum.ewm.stats.server;
+package ru.practicum.ewm.stats.server.service;
 
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
 import ru.practicum.ewm.stats.mapper.EndpointHitMapper;
+import ru.practicum.ewm.stats.server.repository.StatsServerRepository;
+import ru.practicum.ewm.stats.server.utils.ViewStatsProjection;
 
 import java.time.LocalDateTime;
 import java.util.List;
