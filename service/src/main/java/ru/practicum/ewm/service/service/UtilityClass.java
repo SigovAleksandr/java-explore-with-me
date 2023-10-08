@@ -3,13 +3,13 @@ package ru.practicum.ewm.service.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.ewm.client.StatsClient;
 import ru.practicum.ewm.service.dto.event.ConfirmedEventDto;
 import ru.practicum.ewm.service.dto.event.EventShortDto;
 import ru.practicum.ewm.service.mapper.EventMapper;
 import ru.practicum.ewm.service.model.Event;
 import ru.practicum.ewm.service.model.enums.RequestStatus;
 import ru.practicum.ewm.service.repository.RequestRepository;
-import ru.practicum.ewm.client.StatsClient;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.client.StatsClient;
 import ru.practicum.ewm.service.dto.event.EventDto;
 import ru.practicum.ewm.service.dto.event.EventShortDto;
 import ru.practicum.ewm.service.dto.event.EventUpdateRequestDto;
@@ -20,7 +21,6 @@ import ru.practicum.ewm.service.model.enums.RequestStatus;
 import ru.practicum.ewm.service.model.enums.StateAction;
 import ru.practicum.ewm.service.repository.*;
 import ru.practicum.ewm.service.service.interfaces.EventService;
-import ru.practicum.ewm.client.StatsClient;
 import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
 

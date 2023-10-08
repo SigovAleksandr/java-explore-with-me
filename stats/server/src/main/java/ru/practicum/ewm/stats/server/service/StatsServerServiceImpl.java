@@ -5,11 +5,9 @@ import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
 import ru.practicum.ewm.stats.server.mapper.EndpointHitMapper;
 import ru.practicum.ewm.stats.server.repository.StatsServerRepository;
-import ru.practicum.ewm.stats.server.utils.ViewStatsProjection;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StatsServerServiceImpl implements StatsServerService {
