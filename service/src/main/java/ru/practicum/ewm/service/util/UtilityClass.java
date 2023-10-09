@@ -19,6 +19,7 @@ public class UtilityClass {
     public static final String REQUEST_NOT_FOUND = "Запрос не найден";
     public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
+
     public static String formatTimeToString(LocalDateTime time) {
         return time.format(formatter);
     }
