@@ -16,7 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.service.service.UtilityClass.USER_NOT_FOUND;
+import static ru.practicum.ewm.service.util.UtilityClass.USER_NOT_FOUND;
 
 @AllArgsConstructor
 @Slf4j

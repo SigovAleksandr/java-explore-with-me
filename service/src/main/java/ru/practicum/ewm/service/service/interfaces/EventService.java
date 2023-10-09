@@ -4,9 +4,11 @@ import ru.practicum.ewm.service.dto.event.EventDto;
 import ru.practicum.ewm.service.dto.event.EventShortDto;
 import ru.practicum.ewm.service.dto.event.EventUpdateRequestDto;
 import ru.practicum.ewm.service.dto.event.NewEventDto;
+import ru.practicum.ewm.service.model.Event;
 import ru.practicum.ewm.service.model.enums.EventState;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface EventService {
@@ -27,4 +29,6 @@ public interface EventService {
 
     List<EventDto> getAllEventsByAdmin(List<Long> users, List<Long> categories, List<EventState> states,
                                        LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size);
+
+    List<EventShortDto> makeEventShortDto(Collection<Event> events);
 }

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.service.service.UtilityClass.*;
+import static ru.practicum.ewm.service.util.UtilityClass.*;
 
 @AllArgsConstructor
 @Slf4j

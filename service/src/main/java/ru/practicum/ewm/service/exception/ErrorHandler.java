@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.service.service.UtilityClass.formatTimeToString;
+import static ru.practicum.ewm.service.util.UtilityClass.formatTimeToString;
 
-@RestControllerAdvice(basePackages = "ru.practicum.ewm.service")
+@RestControllerAdvice()
 public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -32,12 +32,7 @@ public class ErrorHandler {
         List<String> fieldErrorsMessage = e.getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
-
-        return Map.of("status", "BAD_REQUEST",
-                "reason", "Incorrectly made request.",
-                "message", fieldErrorsMessage.toString(),
-                "timestamp", formatTimeToString(LocalDateTime.now())
-        );
+        return createErrorMessage(e, HttpStatus.BAD_REQUEST, fieldErrorsMessage.toString());
     }
 
     @ExceptionHandler

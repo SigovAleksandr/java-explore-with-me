@@ -15,12 +15,13 @@ import ru.practicum.ewm.service.model.Event;
 import ru.practicum.ewm.service.repository.CompilationRepository;
 import ru.practicum.ewm.service.repository.EventRepository;
 import ru.practicum.ewm.service.service.interfaces.CompilationService;
+import ru.practicum.ewm.service.service.interfaces.EventService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.service.service.UtilityClass.COMPILATION_NOT_FOUND;
+import static ru.practicum.ewm.service.util.UtilityClass.COMPILATION_NOT_FOUND;
 
 @AllArgsConstructor
 @Slf4j
@@ -28,7 +29,7 @@ import static ru.practicum.ewm.service.service.UtilityClass.COMPILATION_NOT_FOUN
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
-    private final UtilityClass serviceUtility;
+    private final EventService eventService;
 
     @Transactional
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
@@ -39,7 +40,7 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setEvents(new HashSet<>(events));
         }
         Compilation savedCompilation = compilationRepository.save(compilation);
-        List<EventShortDto> eventsDto = serviceUtility.makeEventShortDto(savedCompilation.getEvents());
+        List<EventShortDto> eventsDto = eventService.makeEventShortDto(savedCompilation.getEvents());
         return CompilationMapper.INSTANCE.toDto(savedCompilation, eventsDto);
     }
 
@@ -65,7 +66,7 @@ public class CompilationServiceImpl implements CompilationService {
 
         CompilationMapper.INSTANCE.forUpdate(updateCompilationDto, compilation);
 
-        List<EventShortDto> eventsDto = serviceUtility.makeEventShortDto(compilation.getEvents());
+        List<EventShortDto> eventsDto = eventService.makeEventShortDto(compilation.getEvents());
 
         Set<Event> updatedEvents = compilationRepository.save(compilation).getEvents();
 
@@ -78,7 +79,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.findById(compId).orElseThrow(
                 () -> new EntityNotFoundException(COMPILATION_NOT_FOUND)
         );
-        List<EventShortDto> eventsDto = serviceUtility.makeEventShortDto(compilation.getEvents());
+        List<EventShortDto> eventsDto = eventService.makeEventShortDto(compilation.getEvents());
         return CompilationMapper.INSTANCE.toDto(compilation, eventsDto);
     }
 
@@ -98,7 +99,7 @@ public class CompilationServiceImpl implements CompilationService {
         Set<Event> events = compilations.stream()
                 .flatMap(compilation -> compilation.getEvents().stream())
                 .collect(Collectors.toSet());
-        List<EventShortDto> eventsDtoList = serviceUtility.makeEventShortDto(events);
+        List<EventShortDto> eventsDtoList = eventService.makeEventShortDto(events);
 
         Map<Long, EventShortDto> eventDtosMap = new HashMap<>();
         for (EventShortDto eventShortDto : eventsDtoList) {

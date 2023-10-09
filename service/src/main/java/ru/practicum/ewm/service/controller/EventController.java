@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.ewm.service.service.UtilityClass.PATTERN;
+import static ru.practicum.ewm.service.util.UtilityClass.PATTERN;
 
 @AllArgsConstructor
 @Slf4j

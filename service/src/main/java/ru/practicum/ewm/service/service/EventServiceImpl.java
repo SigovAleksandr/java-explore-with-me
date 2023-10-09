@@ -8,10 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.client.StatsClient;
-import ru.practicum.ewm.service.dto.event.EventDto;
-import ru.practicum.ewm.service.dto.event.EventShortDto;
-import ru.practicum.ewm.service.dto.event.EventUpdateRequestDto;
-import ru.practicum.ewm.service.dto.event.NewEventDto;
+import ru.practicum.ewm.service.dto.event.*;
 import ru.practicum.ewm.service.exception.DataException;
 import ru.practicum.ewm.service.mapper.EventMapper;
 import ru.practicum.ewm.service.mapper.LocationMapper;
@@ -32,7 +29,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.service.service.UtilityClass.*;
+import static ru.practicum.ewm.service.util.UtilityClass.*;
 
 @AllArgsConstructor
 @Slf4j
@@ -43,7 +40,6 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final LocationRepository locationRepository;
-    private final UtilityClass utilityClass;
     private final StatsClient statClient = new StatsClient();
 
     private static final String START = "1970-01-01 00:00:00";
@@ -249,7 +245,7 @@ public class EventServiceImpl implements EventService {
         if (events.isEmpty()) {
             return new ArrayList<>();
         }
-        List<EventShortDto> eventShortDtos = utilityClass.makeEventShortDto(events);
+        List<EventShortDto> eventShortDtos = makeEventShortDto(events);
         if (Objects.equals(sort, "VIEWS")) {
             eventShortDtos = eventShortDtos.stream()
                     .sorted(Comparator.comparing(EventShortDto::getViews).reversed())
@@ -270,7 +266,7 @@ public class EventServiceImpl implements EventService {
             return new ArrayList<>();
         }
 
-        return utilityClass.makeEventShortDto(events);
+        return makeEventShortDto(events);
     }
 
     @Transactional(readOnly = true)
@@ -315,9 +311,9 @@ public class EventServiceImpl implements EventService {
     }
 
     private List<EventDto> makeEventDtos(List<Event> events) {
-        Map<String, Long> viewStatsMap = utilityClass.toViewStats(events);
+        Map<String, Long> viewStatsMap = toViewStats(events);
 
-        Map<Long, Long> confirmedRequests = utilityClass.getConfirmedRequests(events);
+        Map<Long, Long> confirmedRequests = getConfirmedRequests(events);
 
         List<EventDto> eventsDto = new ArrayList<>();
         for (Event event : events) {
@@ -386,5 +382,55 @@ public class EventServiceImpl implements EventService {
             );
             return criteriaBuilder.greaterThan(root.get("participantLimit"), sub);
         };
+    }
+
+    private Map<Long, Long> getConfirmedRequests(Collection<Event> events) {
+        List<Long> eventsIds = events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+        List<ConfirmedEventDto> confirmedDtos =
+                requestRepository.countConfirmedRequests(eventsIds, RequestStatus.CONFIRMED);
+        return confirmedDtos.stream()
+                .collect(Collectors.toMap(ConfirmedEventDto::getEventId, ConfirmedEventDto::getCount));
+    }
+
+    private Map<String, Long> toViewStats(Collection<Event> events) {
+        List<String> urisToSend = new ArrayList<>();
+        for (Event event : events) {
+            urisToSend.add(String.format("/events/%s", event.getId()));
+        }
+        List<ViewStatsDto> viewStats = statClient.getStats(
+                START,
+                formatTimeToString(LocalDateTime.now()),
+                urisToSend,
+                true
+        );
+
+        return viewStats.stream()
+                .collect(Collectors.toMap(ViewStatsDto::getUri, ViewStatsDto::getHits));
+    }
+
+    public List<EventShortDto> makeEventShortDto(Collection<Event> events) {
+        Map<String, Long> viewStatsMap = toViewStats(events);
+
+        Map<Long, Long> confirmedRequests = getConfirmedRequests(events);
+
+        List<EventShortDto> eventsDto = new ArrayList<>();
+        for (Event event : events) {
+            Long eventId = event.getId();
+            Long reqCount = confirmedRequests.get(eventId);
+            Long views = viewStatsMap.get(String.format("/events/%s", eventId));
+            if (reqCount == null) {
+                reqCount = 0L;
+            }
+            if (views == null) {
+                views = 0L;
+            }
+            eventsDto.add(
+                    EventMapper.INSTANCE.toShortDto(event, reqCount, views)
+            );
+        }
+
+        return eventsDto;
     }
 }

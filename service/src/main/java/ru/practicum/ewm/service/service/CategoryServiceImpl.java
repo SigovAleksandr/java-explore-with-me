@@ -16,7 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.ewm.service.service.UtilityClass.CATEGORY_NOT_FOUND;
+import static ru.practicum.ewm.service.util.UtilityClass.CATEGORY_NOT_FOUND;
 
 @AllArgsConstructor
 @Slf4j
