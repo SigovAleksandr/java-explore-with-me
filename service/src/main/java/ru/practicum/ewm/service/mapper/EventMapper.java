@@ -2,6 +2,7 @@ package ru.practicum.ewm.service.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import ru.practicum.ewm.service.dto.comment.CommentResponseDto;
 import ru.practicum.ewm.service.dto.event.EventDto;
 import ru.practicum.ewm.service.dto.event.EventShortDto;
 import ru.practicum.ewm.service.dto.event.EventUpdateRequestDto;
@@ -10,6 +11,8 @@ import ru.practicum.ewm.service.model.Category;
 import ru.practicum.ewm.service.model.Event;
 import ru.practicum.ewm.service.model.User;
 import ru.practicum.ewm.service.model.enums.EventState;
+
+import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EventMapper {
@@ -23,11 +26,13 @@ public interface EventMapper {
 
     @Mapping(target = "confirmedRequests", source = "confirmedRequests")
     @Mapping(target = "views", source = "views")
-    EventDto toDto(Event event, Long confirmedRequests, Long views);
+    @Mapping(target = "comments", source = "comments")
+    EventDto toDto(Event event, Long confirmedRequests, Long views, List<CommentResponseDto> comments);
 
     @Mapping(target = "confirmedRequests", source = "confirmedRequests")
     @Mapping(target = "views", source = "views")
-    EventShortDto toShortDto(Event event, Long confirmedRequests, Long views);
+    @Mapping(target = "comments", source = "comments")
+    EventShortDto toShortDto(Event event, Long confirmedRequests, Long views, List<CommentResponseDto> comments);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)

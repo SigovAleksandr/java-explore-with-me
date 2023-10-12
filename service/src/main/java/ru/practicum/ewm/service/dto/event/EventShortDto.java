@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import ru.practicum.ewm.service.dto.category.CategoryDto;
+import ru.practicum.ewm.service.dto.comment.CommentResponseDto;
 import ru.practicum.ewm.service.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -23,4 +25,5 @@ public class EventShortDto {
     private final Boolean paid;
     private final String title;
     private final Long views;
+    private List<CommentResponseDto> comments;
 }
